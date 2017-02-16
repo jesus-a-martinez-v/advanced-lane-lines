@@ -80,39 +80,8 @@ def calculate_perspective_transform_parameters():
              3. The source points, which describe a trapezoid in the original image.
              4. The destination points, which describe a rectangle in the transformed image.
     """
-    # width, height = image_shape
-    # print("width", width)
-    # print("height", height)
-    #
-    # bottom_width = 0.76
-    # # bottom_width = 0.8
-    # # mid_width = 0.1
-    # mid_width = 0.08
-    # height_percentage = 0.62
-    # # height_percentage = 0.58
-    # bottom_trim = 0.94
-    # # bottom_trim = 0.935
-    #
-    # src = np.float32([[width * (0.5 - mid_width / 2), height * height_percentage],
-    #                   [width * (0.5 + mid_width / 2), height * height_percentage],
-    #                   [bottom_width * width, height * bottom_trim],
-    #                   [width - bottom_width * width, height * bottom_trim]])
-
     src = np.float32([[589,  446], [691,  446], [973,  677], [307,  677]])
-
-    # src = np.float32([[585, 460], [203, 720], [1127, 720], [695, 460]])
-    # dst = np.float32([[320, 0], [320, 720], [960, 720], [960, 0]])
-    #
-    # print("src", src)
-    # offset = width * 0.25
-    # # offset = width * 0.245
-    # dst = np.float32([[offset, 0],
-    #                   [width - offset, 0],
-    #                   [width - offset, height],
-    #                   [offset, height]])
     dst = np.float32([[320, 0], [960, 0], [960, 720], [320, 720]])
-    #
-    # print("dst", dst)
 
     transform_matrix = cv2.getPerspectiveTransform(src, dst)
     inverse_transform_matrix = cv2.getPerspectiveTransform(dst, src)
@@ -196,34 +165,6 @@ def put_lines_on_image(input_image, reverse_perspective_transform_matrix, left_l
 
     base = cv2.addWeighted(input_image, 1.0, road_warped_background, -1.0, 0.0)
     return cv2.addWeighted(base, 1, road_warped, .7, 0.0)
-
-
-def region_of_interest(img, vertices):
-    """
-    Applies an image mask.
-
-    Only keeps the region of the image defined by the polygon
-    formed from `vertices`. The rest of the image is set to black.
-    """
-    # defining a blank mask to start with
-    mask = np.zeros_like(img)
-
-    # defining a 3 channel or 1 channel color to fill the mask with depending on the input image
-    if len(img.shape) > 2:
-        channel_count = img.shape[2]  # i.e. 3 or 4 depending on your image
-        ignore_mask_color = (255,) * channel_count
-    else:
-        ignore_mask_color = 255
-
-    a, b, c, d = vertices
-    vertices = np.array([[c, a, b, d]], dtype=np.int32)
-
-    # filling pixels inside the polygon defined by "vertices" with the fill color
-    cv2.fillPoly(mask, vertices, ignore_mask_color)
-
-    # returning the image only where mask pixels are nonzero
-    masked_image = cv2.bitwise_and(img, mask)
-    return masked_image
 
 
 def evaluate_polynomial(ys, coefficients):
