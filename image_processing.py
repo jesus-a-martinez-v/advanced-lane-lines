@@ -89,21 +89,6 @@ def calculate_perspective_transform_parameters():
     return transform_matrix, inverse_transform_matrix, src, dst
 
 
-def window_mask(window_width, window_height, image, center, level):
-    image_width, image_height = image.shape[1], image.shape[0]
-
-    height_lower_boundary = int(image_height - (level + 1) * window_height)
-    height_upper_boundary = int(image_height - level * window_height)
-
-    width_lower_boundary = max(0, int(center - window_width))
-    width_upper_boundary = min(int(center + window_width), image_width)
-
-    binary_output = np.zeros_like(image)
-    binary_output[height_lower_boundary: height_upper_boundary,
-    width_lower_boundary: width_upper_boundary] = 1
-    return binary_output
-
-
 def put_offset_and_radius(image, offset_from_center, radius):
     """
     Puts the offset from the center of the lane and the radius of the curvature on top of a provided image.
