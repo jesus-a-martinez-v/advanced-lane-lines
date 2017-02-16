@@ -1,8 +1,8 @@
 # Advanced Lane Finding
 
-This project was developed as part of the Computer VIsion module of the amazing Self-Driving Car Engineer Nanodegree
+This project was developed as part of the Computer Vision module of the amazing Self-Driving Car Engineer Nanodegree
 program offered by
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+ [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
 
 The goals / steps of this project are the following:
@@ -16,14 +16,14 @@ The goals / steps of this project are the following:
 * Warp the detected lane boundaries back onto the original image.
 * Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
-This README is structure in a Q&A fashion, where each section is comprised of several questions or issues that we had to
-tackle in order to meet the minimum requirements stated in [this rubric]().
+This README is structured in a Q&A fashion, where each section is comprised of several questions or issues that we had to
+tackle in order to meet the minimum requirements stated in [this rubric](https://review.udacity.com/#!/rubrics/571/view).
 
 ## Writeup / README
 
 #### I. _"Provide a Writeup / README that includes all the rubric points and how you addressed each one."_
 
-This is the README. Keep reading to find out how we applied several cool computer vision techniques to solve the problem at hand.
+This is the README. Keep reading to find out how we applied several cool computer vision techniques to solve the problem at hand ;)
 
 ## Camera Calibration
 
@@ -68,9 +68,11 @@ def calibrate_camera(directory_path='./camera_cal', chessboard_shape=(9, 6), sav
             cv2.imwrite(directory_path + '/corners' + str(img_index) + ".jpg", img)
 
     # We load the first image just to determine its dimensions.
-    img = cv2.imread(directory_path + '/calibration1.jpg')
+    img = cv2.imread(directory_path + '/calibration2.jpg')
     image_size = (img.shape[1], img.shape[0])
     ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, image_size, None, None)
+
+    cv2.imwrite(directory_path + '/calibration2_corrected.jpg', cv2.undistort(img, mtx, dist, None, mtx))
 
     if save_location:
         pickle.dump({'mtx': mtx, 'dist': dist, 'rvecs': rvecs, 'tvecs': tvecs}, open(save_location, 'wb'))
@@ -87,13 +89,13 @@ The overall process is as follows:
 * Finally, we save these parameters in a pickled format, and return them.
 
 Here's an original, distorted, chess board image:
-[!alt-tag]()
+![alt-tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/camera_cal/calibration2.jpg)
 
 Here's the same image with corners drawn on it:
-[!alt-tag]()
+![alt-tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/camera_cal/corners0.jpg)
 
 Finally, here's the undistorted image:
-[!alt-tag]()
+![alt-tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/camera_cal/calibration2_corrected.jpg)
 
 ## Pipeline (test images)
 
@@ -102,10 +104,10 @@ Finally, here's the undistorted image:
 Using the camera matrix and the distortion coefficients calculated in the last step, we applied the `cv2.undistort()` function to each image in the `/test_images` directory.
 
 Here's an original test image:
-[!alt-tag]()
+![alt-tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/test_images/test4.jpg)
 
 And here's the undistorted version:
-[!alt-tag]()
+![alt-tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/undistorted_test4.jpg)
 
 #### II. _"Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image. Provide an example of a binary image result."_
 
@@ -188,19 +190,19 @@ Finally, we turn white those pixels that are captured either by the color mask o
 The threshold ranges for each mask were the result of many trial and error iterations.
 
 Here's an original image:
-[!alt-tag]()
+![alt-tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/undistorted_test4.jpg)
 
 And here's the same image after the thresholding operation:
-[!alt-tag]()
+![alt-tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/raw_test4.jpg)
 
 #### III. _"Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image."_
 
 Given that our goal is to accurately identify the lane lines, as well as their curvature and the position of the car in the lane, we need a more detailed view
 of these lines. What's wrong with the original perspective of the images? Well, as the "depth" increases (this is, the farther points in the image from the camera perspective) we lose valuable information about the lane lines shape. For example, in the image below we can see how the left lane looks straighter than the right lane:
-[!alt tag]()
+[!alt tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/undistorted_test5.jpg)
 
 But after we transform our point of view to a top perspective, we can see with more detail that both lane lines are curving in about the same degree:
-[!alt tag]()
+[!alt tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/warped_test5.jpg)
 
 What steps did we take to perform this perspective transform? Here's the outline:
 
@@ -232,7 +234,7 @@ Then, to from one perspective to another, we use the `cv2.warpPerspective()` fun
 #### IV. _"Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial"_
 
 After reverting distortion, applying the thresholding techniques described above, and performing a bird-eye perspective transformation, we end up with an image like this:
-[alt-tag!]()
+![alt-tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/raw_warped_test3.jpg)
 
 The next step is to decide which pixels constitute a line. For that matter we implemented a **Sliding Windows** technique, using 1D convolutions instead of histograms. This decision was highly inspired by the amazing Q&A session held by Udacity in [this video](https://www.youtube.com/watch?v=vWY8YUayf9Q&feature=youtu.be). Given that convolutions are a pretty tricky concept to grasp, here are some useful links that might shed some light over the subject:
 
@@ -311,7 +313,7 @@ def get_line_polygon(xs, ys, thickness=20):
 ```
 
 Drawing each line onto the original image (after reverting the perspective transform, clearly) we get something like this:
-[alt tag]()
+[alt tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/only_lines_test3.jpg)
 
 #### V. _"Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center._
 
@@ -346,13 +348,13 @@ Then, to calculate the position of the car respect to the center of the lane we 
 #### VI. _"Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly."_
 
 After all the processing described above, we end up with a nice annotated image like this:
-[alt-tag]()
+![alt-tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/annotated_test3.jpg)
 
 ## Pipeline (Video)
 
 #### I. _"Provide a link to your final video output. Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!)"_
  
-You can watch the result of processing a footage from a camera mounted on a car by clicking [here!]() :).
+You can watch the result of processing a footage from a camera mounted on a car by clicking [here!](https://drive.google.com/file/d/0B1SO9hJRt-hgR2hQdHgydEhOalk/view?usp=sharing) :).
 
 ## Discussion
 
