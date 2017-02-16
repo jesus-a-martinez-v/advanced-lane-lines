@@ -244,7 +244,7 @@ The next step is to decide which pixels constitute a line. For that matter we im
 
 Basically, the advantage of using a convolution is that provides a smoother result by taking into account a larger area of the image.
 
-In order to keep track of the lines found in each frame, we implemented an object to store these results, which con be found in `history_keeper.py`. All the magic happens in the `find_window_centroids()` method.
+In order to keep track of the lines found in each frame, we implemented an object to store these results, which can be found in `history_keeper.py`. All the magic happens in the `find_window_centroids()` method.
 
 After finding the centers of the windows on each line, we fitted a second order polynomial to each line. Here's the code that does the job:
 
@@ -313,7 +313,7 @@ def get_line_polygon(xs, ys, thickness=20):
 ```
 
 Drawing each line onto the original image (after reverting the perspective transform, clearly) we get something like this:
-[alt tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/only_lines_test3.jpg)
+![alt tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/only_lines_test3.jpg)
 
 #### V. _"Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center._
 
