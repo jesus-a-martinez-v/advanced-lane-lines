@@ -199,10 +199,10 @@ And here's the same image after the thresholding operation:
 
 Given that our goal is to accurately identify the lane lines, as well as their curvature and the position of the car in the lane, we need a more detailed view
 of these lines. What's wrong with the original perspective of the images? Well, as the "depth" increases (this is, the farther points in the image from the camera perspective) we lose valuable information about the lane lines shape. For example, in the image below we can see how the left lane looks straighter than the right lane:
-[!alt tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/undistorted_test5.jpg)
+![alt tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/undistorted_test5.jpg)
 
 But after we transform our point of view to a top perspective, we can see with more detail that both lane lines are curving in about the same degree:
-[!alt tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/warped_test5.jpg)
+![alt tag](https://github.com/jesus-a-martinez-v/advanced-lane-lines/blob/master/output_images/warped_test5.jpg)
 
 What steps did we take to perform this perspective transform? Here's the outline:
 
