@@ -19,6 +19,13 @@ The goals / steps of this project are the following:
 This README is structured in a Q&A fashion, where each section is comprised of several questions or issues that we had to
 tackle in order to meet the minimum requirements stated in [this rubric](https://review.udacity.com/#!/rubrics/571/view).
 
+## What you'll need
+
+* Python >=3.5
+* [NumPy](http://www.numpy.org/).
+* [OpenCV](http://opencv.org/).
+* [MoviePy](http://zulko.github.io/moviepy/).
+
 ## Writeup / README
 
 #### I. _"Provide a Writeup / README that includes all the rubric points and how you addressed each one."_
